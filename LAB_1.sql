@@ -78,7 +78,15 @@
 		where Artist_name = 'Aparshakti Khurana'
 	)
 --16. Retrieve all the song titles with its album title.
+	select *
+	from Songs
+	join Albums
+	on Songs.Album_id = Albums.Album_id
 --17. Find all the songs which are released in 2020.
+	select * from Songs
+	join Albums
+	on Songs.Album_id = Albums.Album_id
+	where Albums.Release_year = 2020
 --18. Create a view called ‘Fav_Songs’ from the songs table having songs with song_id 101-105.
 --19. Update a song name to ‘Jannat’ of song having song_id 101 in Fav_Songs view.
 --20. Find all artists who have released an album in 2020.
