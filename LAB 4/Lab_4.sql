@@ -68,23 +68,79 @@ SELECT dbo.FN_ODDorEven(4) AS 'result';
 			from Person
 		)
 --6. Write a function to print number from 1 to N. (Using while loop)
-	create or alter function FN_1TON(
-		@num int
-	)
-	returns int
-	as
-	return(
-		declare @i int = 0
-		while @i < @num
-			print i
-			@i += 1
-	)
-	end
-		
+CREATE OR ALTER FUNCTION FN_Print1ToN(@num INT)
+RETURNS @Numbers TABLE (Number INT)
+AS
+BEGIN
+    DECLARE @i INT = 1;
+    WHILE @i <= @num
+    BEGIN
+        INSERT INTO @Numbers (Number) VALUES (@i)
+        SET @i = @i + 1; 
+    END
+    RETURN;
+END;
+
+SELECT * FROM dbo.FN_Print1ToN(12);
 --7. Write a function to find the factorial of a given integer.
+	create or alter function FN_Factorial(
+		@No int
+	)
+		returns int
+	as
+	begin
+		declare @sum int = 1,
+				@temp int = 1
+
+		while @temp <= @No
+		begin
+			set @sum = @sum * @temp
+			set @temp += 1
+		end
+		return @sum
+	end
+	select dbo.FN_Factorial(4) as factorialas 
 --Part – B
 --8. Write a function to compare two integers and return the comparison result. (Using Case statement)
+	create or alter function Fn_comapreTwoNumbers(
+		@num1 int, @num2 int
+	)
+		returns varchar(400)
+	as
+	begin
+		declare @result varchar(400) = ''
+
+		set @result  =  case
+							when @num1 > @num2 then CAST(@num1 AS VARCHAR) + ' is greater than ' + CAST(@num2 AS VARCHAR)
+							when @num1 < @num2 then CAST(@num2 AS VARCHAR) + ' is greater than ' + CAST(@num1 AS VARCHAR)
+							ELSE CAST(@num1 AS VARCHAR) + ' and ' + CAST(@num2 AS VARCHAR) + ' both are the same!'
+						end
+		return @result
+		end
+
+		select dbo.Fn_comapreTwoNumbers(2,4) as comaprisonResult
+		
+
 --9. Write a function to print the sum of even numbers between 1 to 20.
+	create or alter function FN_Even()
+	returns int
+	as
+	begin
+		declare @Sum int = 0,
+		@No int = 2
+
+		while @No < 20
+		begin
+			if(@No % 2 = 0) 
+				set @Sum += @No
+		set @No += 1
+		end
+	return @No
+	end
+
+	select dbo.FN_Even() as EvenSum
+
+
 --10. Write a function that checks if a given string is a palindrome
 --Part – C
 --11. Write a function to check whether a given number is prime or not.
