@@ -1,3 +1,4 @@
+
 -- Create Department Table 
 CREATE TABLE Department ( 
 DepartmentID INT PRIMARY KEY, 
@@ -220,20 +221,174 @@ FOREIGN KEY (DesignationID) REFERENCES Designation(DesignationID)
 --Part – B 
 --5. Create a Procedure that takes the department name as input and returns a table with all workers 
 --working in that department. 
+
+	create or alter procedure PR_B5
+		@DepartmentName varchar(100)
+	as 
+	begin
+			select * 
+			from Department
+			join Person
+			on Person.DepartmentID = Department.DepartmentID
+			where DepartmentName = @DepartmentName
+	end
+
+	exec PR_B5 HR
+		
+
 --6. Create Procedure that takes department name & designation name as input and returns a table with 
 --worker’s first name, salary, joining date & department name. 
+	create or alter procedure PR_B6
+		@DepartmentName varchar(100),
+		@DesignationName varchar(100)
+	as
+	begin
+			select	Person.FirstName, Person.Salary, Person.JoiningDate, Department.DepartmentName
+			from Person
+			join Department
+			on Person.DepartmentID = Department.DepartmentID
+			join Designation
+			on Person.DesignationID = Designation.DesignationID
+			where DepartmentName = @DepartmentName and DesignationName = @DesignationName
+	end
+
+	exec PR_B6 'IT', 'Jobber'
+				
 --7. Create a Procedure that takes the first name as an input parameter and display all the details of the 
---worker with their department & designation name. 
---8. Create Procedure which displays department wise maximum, minimum & total salaries. 
---9. Create Procedure which displays designation wise average & total salaries. 
+--worker with their department & designation name.
+	create or alter procedure PR_B7
+		@FirstName varchar(100)
+	as
+	begin
+			select	*
+			from Person
+			join Department
+			on Person.DepartmentID = Department.DepartmentID
+			join Designation
+			on Person.DesignationID = Designation.DesignationID
+			where Person.FirstName = @FirstName
+	end
+			
+exec PR_B7 'Hardik'
+--8. Create Procedure which displays department wise maximum, minimum & total salaries.
+	create or alter procedure PR_B8
+	as
+	begin
+			select	Department.DepartmentName, max(Person.Salary) as MaxSalary, 
+			min(Person.Salary) as MinSalary,
+			sum(Person.Salary) as TotalSalary
+			from Person
+			join Department
+			on Person.DepartmentID = Department.DepartmentID
+			group by Department.DepartmentName
+			
+	end
+	exec PR_B8
+--9. Create Procedure which displays designation wise average & total salaries.
+	create or alter procedure PR_B9
+	as
+	begin
+			select	Designation.DesignationName, avg(Person.Salary) as AVGSalary, 
+			sum(Person.Salary) as TotalSalary
+			from Person
+			join Designation
+			on Person.DesignationID = Designation.DesignationID
+			group by Designation.DesignationName	
+	end
+
+	exec PR_B9
+	
 --Part – C 
 --10. Create Procedure that Accepts Department Name and Returns Person Count. 
+	create or alter Procedure PR_B10
+		@DepartmentName varchar(100)
+	as
+	begin
+		select count(Person.PersonID) as TotalCount
+		from Person
+		join Department
+		on Person.DepartmentID = Department.DepartmentID
+		where Department.DepartmentName = @DepartmentName
+	end
+	exec PR_B10 'IT'
+
 --11. Create a procedure that takes a salary value as input and returns all workers with a salary greater than 
 --input salary value along with their department and designation details. 
+	create or alter procedure PR_C11
+		@Salary int
+	as
+	begin
+		select *
+		from person
+		join Designation on Person.DepartmentID = Designation.DesignationID
+		join Department on Department.DepartmentID = Person.DepartmentID
+		where Person.Salary > @Salary
+	end
+
+
 --12. Create a procedure to find the department(s) with the highest total salary among all departments. 
+	create or alter procedure PR_C12
+	as
+	begin
+		select Top 1 Department.DepartmentName, sum(Person.Salary)
+		from Person
+		join Department
+		on Person.DepartmentID = Department.DepartmentID
+		group by Department.DepartmentName
+		order by Person.Salary desc
+	end
 --13. Create a procedure that takes a designation name as input and returns a list of all workers under that 
 --designation who joined within the last 10 years, along with their department. 
+	create or alter procedure PR_C13
+		@DesName varchar(100)
+	as
+	begin
+		select * 
+		from Person 
+		join Designation on Person.DepartmentID = Designation.DesignationID
+		join Department on Department.DepartmentID = Person.DepartmentID
+		where DATEDIFF(MONTH, Person.JoiningDate, GETDATE()) <= 120 
+		and Designation.DesignationName = @DesName
+	end	
+
 --14. Create a procedure to list the number of workers in each department who do not have a designation 
---assigned. 
+--assigned.
+	create or alter procedure PR_C14
+	as
+	begin
+		select Department.DepartmentName,
+		count(Person.PersonID) as PersonCount
+		from Person
+		join Department
+		on Person.DepartmentID = Department.DepartmentID
+		left join Designation
+		on Person.DesignationID = Designation.DesignationID
+		where Person.DepartmentID is null
+		group by Department.DepartmentName
+	end
+
+	exec PR_C14
+			
 --15. Create a procedure to retrieve the details of workers in departments where the average salary is above 
 --12000.
+	create or alter procedure PR_ABOVE_AVG_SAL
+	as
+	begin
+		select p.*, d.DepartmentName
+		from Person p
+		join Department d
+		on p.DepartmentID = d.DepartmentID
+		where d.DepartmentID in (
+			
+			select d.DepartmentID
+			from  Person P
+            join Department d 
+			ON P.DepartmentID = d.DepartmentID
+			group by d.DepartmentID
+			having avg(p.salary) > 12000
+		)
+	end
+
+	exec PR_ABOVE_AVG_SAL
+
+------------------viraj---------------------------------------------------
