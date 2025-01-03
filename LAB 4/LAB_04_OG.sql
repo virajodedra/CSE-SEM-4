@@ -208,6 +208,26 @@ SELECT dbo.FN_PALINDROM('viraj odedra') AS result;
 	end
 
 	select dbo.FN_RemainingDays(2024, 2) as Days_In_Given_Month
+
+
+
+		--OR
+
+		create or alter function FN_RemainingDays(
+			@Year int, @Month int
+		)
+		returns int
+		as
+		begin
+			declare @Ans varchar(100) , @DATE DATE, @Day int
+
+			set @Ans = CAST(@Year as varchar) + '-' + CAST(@Month as varchar) + '-1'
+			set  @DATE = CAST(@Ans as date)
+
+			set @Day = Day(EOMONTH(@DATE))
+
+			return @Day
+		end
 --14. Write a function which accepts departmentID as a parameter & returns a detail of the persons.
 	create or alter function FN_department(
 		@DeptID int
