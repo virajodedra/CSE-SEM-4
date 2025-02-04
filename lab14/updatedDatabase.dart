@@ -28,7 +28,7 @@ class _DatabasedemoState extends State<Databasedemo> {
       version: 1,
       onCreate: (db, version) async {
         await db.execute(
-          "CREATE TABLE sampleTable (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, desc TEXT)", // ✅ FIXED SQL SYNTAX
+          "CREATE TABLE sampleTable (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, desc TEXT)", 
         );
       },
     );
