@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiHelper {
-  final String baseUrl = 'https://67b41a5c392f4aa94fa95325.mockapi.io/todo/todo';
+  final String baseUrl = 'https://67b41a5c392f4aa94fa95325.mockapi.io/todo';
 
   Future<void> addTodo(String title, String description) async {
     await http.post(
