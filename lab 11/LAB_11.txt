@@ -132,7 +132,7 @@ db.Student.find({SNAME : /^K/i})
 db.Student.find({SNAME : /^[ZD]/i})
 
 3. Display documents where city starts with A to R.
-db.Student.find({CITY : /^[AR]/i})
+db.Student.find({CITY : /^[A-R]/i})
 
 4. Display students’ info whose name start with P and ends with i.
 db.Student.find({SNAME : /^P.*I$/i})
